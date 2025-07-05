@@ -16,8 +16,18 @@ public class Categoria {
     @Column(nullable = false)
     private String nome;
     
+    public Categoria() {}
     
- // Getters e Setters
+        
+    public Categoria(Long id, @NotBlank String nome) {
+		super();
+		this.id = id;
+		this.nome = nome;
+	}
+    
+    
+    
+// Getters e Setters
     public void setId(long l) { 		this.id=l;			}
     public Long getId() {		return id;	}
 
