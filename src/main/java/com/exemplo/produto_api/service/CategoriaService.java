@@ -18,6 +18,8 @@ public class CategoriaService {
 
     public CategoriaService(CategoriaRepository repository) {     this.repository = repository;    }
 
+    
+    //Métodos
     public CategoriaResponseDTO criar(CategoriaRequestDTO dto) {
         if (repository.existsByNome(dto.getNome())) { throw new RuntimeException("Categoria já existe com esse nome.");       }
 
@@ -29,7 +31,6 @@ public class CategoriaService {
         return new CategoriaResponseDTO(salva.getId(), salva.getNome());
     }
 
-    
     
     public List<CategoriaResponseDTO> listar() {
         return repository.findAll()
@@ -46,7 +47,6 @@ public class CategoriaService {
         return new CategoriaResponseDTO(categoria.getId(), categoria.getNome());
     }
 
-   
     
     public CategoriaResponseDTO atualizar(Long id, CategoriaRequestDTO dto) {
         Categoria categoria = repository.findById(id)
@@ -59,6 +59,7 @@ public class CategoriaService {
         return new CategoriaResponseDTO(atualizada.getId(), atualizada.getNome());
     }
 
+    
     public void deletar(Long id) {
         if (!repository.existsById(id)) {
             throw new RuntimeException("Categoria não encontrada.");
