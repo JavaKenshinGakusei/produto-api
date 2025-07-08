@@ -1,8 +1,8 @@
 package com.exemplo.produto_api.service;
 
 
-
-import com.exemplo.produto_api.dto.ProdutoDTO;
+import com.exemplo.produto_api.dto.ProdutoRequestDTO;
+import com.exemplo.produto_api.dto.ProdutoResponseDTO;
 import com.exemplo.produto_api.entity.Categoria;
 import com.exemplo.produto_api.entity.Produto;
 import com.exemplo.produto_api.repository.CategoriaRepository;
@@ -10,7 +10,6 @@ import com.exemplo.produto_api.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProdutoService {
@@ -23,35 +22,56 @@ public class ProdutoService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public List<ProdutoDTO> listar() {
-        return produtoRepository.findAll().stream()
-            .map(this::toDTO)
-            .collect(Collectors.toList());
+    public ProdutoResponseDTO criar(ProdutoRequestDTO dto) {
+        Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+
+        Produto produto = new Produto(null, dto.getNome(), dto.getPreco(), dto.getQuantidade(), categoria);
+        Produto salvo = produtoRepository.save(produto);
+
+        return toResponse(salvo);
     }
 
-    public ProdutoDTO salvar(ProdutoDTO dto) {
-        Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
-            .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada"));
+    public List<ProdutoResponseDTO> listar() {
+        return produtoRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
 
-        Produto produto = new Produto();
+    public ProdutoResponseDTO buscarPorId(Long id) {
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+        return toResponse(produto);
+    }
+
+    public ProdutoResponseDTO atualizar(Long id, ProdutoRequestDTO dto) {
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+
         produto.setNome(dto.getNome());
         produto.setPreco(dto.getPreco());
         produto.setQuantidade(dto.getQuantidade());
         produto.setCategoria(categoria);
 
-        produto = produtoRepository.save(produto);
-
-        return toDTO(produto);
+        Produto atualizado = produtoRepository.save(produto);
+        return toResponse(atualizado);
     }
 
-    private ProdutoDTO toDTO(Produto produto) {
-        ProdutoDTO dto = new ProdutoDTO();
-        dto.setId(produto.getId());
-        dto.setNome(produto.getNome());
-        dto.setPreco(produto.getPreco());
-        dto.setQuantidade(produto.getQuantidade());
-        dto.setCategoriaId(produto.getCategoria().getId());
-        return dto;
+    public void remover(Long id) {
+        produtoRepository.deleteById(id);
+    }
+
+    private ProdutoResponseDTO toResponse(Produto p) {
+        return new ProdutoResponseDTO(
+                p.getId(),
+                p.getNome(),
+                p.getPreco(),
+                p.getQuantidade(),
+                p.getCategoria().getNome()
+        );
     }
 }
-

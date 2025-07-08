@@ -14,7 +14,7 @@ public class Produto {
     private String nome;
 
     @Column(nullable = false)
-    private BigDecimal preco;
+    private Double preco;
 
     @Column(nullable = false)
     private Integer quantidade;
@@ -23,6 +23,15 @@ public class Produto {
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
+    public Produto() {}
+
+    public Produto(Long id, String nome, Double preco, Integer quantidade, Categoria categoria) {
+        this.id = id;
+        this.nome = nome;
+        this.preco = preco;
+        this.quantidade = quantidade;
+        this.categoria = categoria;
+    }
 	
  // Getters e Setters
     public Long getId() { 	return id;	}
@@ -30,8 +39,8 @@ public class Produto {
     public String getNome() { return nome; 	}
 	public void setNome(String nome) { 	this.nome = nome;	}
 
-	public BigDecimal getPreco() { return preco;	}
-	public void setPreco(BigDecimal preco) { this.preco = preco;	}
+	public Double getPreco() { return preco;	}
+	public void setPreco(Double preco) { this.preco = preco;	}
 
 	public Integer getQuantidade() { 		return quantidade;	}
 	public void setQuantidade(Integer quantidade) {		this.quantidade = quantidade;	}
