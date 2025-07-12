@@ -66,13 +66,37 @@ bash
 http://localhost:8181/swagger-ui.html
 
 
-🧪 Testes
-Para rodar os testes automatizados:
+## 🧪 Testes Automatizados
+
+Este projeto inclui testes automatizados para garantir a estabilidade da aplicação.
+
+### Tipos de testes incluídos:
+
+- ✅ Testes unitários para regras de negócio nas classes `Service`
+- ✅ Testes com `@WebMvcTest` para simular requisições HTTP nos controllers
+- ✅ Testes com `@SpringBootTest` para endpoints reais com banco limpo
+- ✅ Verificação de exceções, validações e integrações entre camadas
+
+
+
+### ✅ Como executar os testes:
+
+Use o seguinte comando no terminal (com Maven):
+
+bash
 ./mvnw test
+
+Ou, no STS/IntelliJ, clique com o botão direito sobre a pasta src/test e selecione "Run Tests".
+
+
+📄 Veja detalhes dos testes em [docs/TESTES.md](docs/TESTES.md)
+
+
+
 
 
 🚀 Próximos passos
-Implementar CRUD completo de produto e categoria
+
 
 Desenvolver microsserviços complementares: user-api e pedido-api
 
